@@ -2,6 +2,12 @@
 <head>
     <title>AngularJS GET request with PHP</title>
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+    <script src="sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="sweetalert/dist/sweetalert.css">
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.24/angular.min.js"></script>
     <style>
     .hide {
@@ -75,6 +81,27 @@
     </body>
 
     <script>
+
+swal({     title: "Je verlaat 4MORGEN zonder ingelogd te zijn?",
+           text: "Mocht je een aankoop doen, dan kunnen we de donatie niet koppelen aan jouw goede doel(en). Dit bedrag wordt dan aangewend voor een specifiek goed doel,project of activiteit.",
+           type: "warning",
+           showCancelButton: true,
+           timer: 2000,
+           confirmButtonColor: "#DD6B55",
+           confirmButtonText: "Inloggen",
+           cancelButtonText: "Nee, bedankt",
+           closeOnConfirm: false,
+           closeOnCancel: false },
+           function(isConfirm){
+             if (isConfirm) {
+               window.open("https://qa.4morgen.org/inloggen");
+
+             }
+             else
+             {
+               window.open("http://www.coolblue.com");
+             }
+           });
     var fetch = angular.module('fetch', []);
 
     fetch.controller('databaseController', ['$scope', '$http', function ($scope, $http) {
