@@ -1,6 +1,6 @@
 <?php
 //database settings
-$connect = mysqli_connect("localhost", "root", "", "company");
+$connect = mysqli_connect("127.0.0.1", "root", "root", "company");
 
 $result = mysqli_query($connect, "select * from myTable");
 

@@ -11,9 +11,9 @@ $request = json_decode($postdata);
 $voornaam = $request->voornaam;
 
 
-$servername = "localhost";
+$servername = "127.0.0.1";
 $username = "root";
-$password = "";
+$password = "root";
 $dbname = "company";
 
 

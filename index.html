@@ -1,121 +1,108 @@
 <html ng-app="fetch">
-    <head>
+<head>
     <title>AngularJS GET request with PHP</title>
-      <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.24/angular.min.js"></script>
-      <style>
-      .hide {
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.24/angular.min.js"></script>
+    <style>
+    .hide {
         visibility: hidden;
-      }
+    }
 
-      </style>
+    </style>
 
-    </head>
+</head>
 
-    <body>
+<body ng-controller="databaseController">
     <br>
 
-      <div class="row">
+    <div class="row">
         <div class="container">
-          <h1>Angular $http GET Ajax Call</h1>
-          <div ng-controller="databaseController">
-          <input type="text" ng-model="searchFilter" class="form-control">
-          <br>
-          <select class="form-control" name="" ng-model="rowLimit">
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-            <option value="1000">alles</option>
+            <h1>Angular $http GET Ajax Call</h1>
+            <div>
+                <input type="text" ng-model="searchFilter" class="form-control">
+                <br>
+                <select class="form-control" name="" ng-model="rowLimit">
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="1000">alles</option>
 
-          </select>
-          order by <select class="form-control" name="" ng-model="sortColumn">
-            <option value="+voornaam">voornaam alfabetief</option>
-            <option value="-voornaam">voornaam alfabetief maar dan anders</option>
-            <<option value="">nummer</option>
-          </select>
-            <!-- Rows to display:<input type="number" step="1" min="1" max="7" ng-model="rowLimit"> -->
-              <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>nummer</th>
-                        <th>naam</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="employee in data | filter:searchFilter | orderBy:sortColumn| limitTo:rowLimit ">
-                        <td>{{employee.id}}</td>
-                        <td>{{employee.voornaam | uppercase}}</td>
-                        <td class="hide">{{employee.afdeling}}</td>
-                    </tr>
+                </select>
+                order by <select class="form-control" name="" ng-model="sortColumn">
+                    <option value="+voornaam">voornaam alfabetief</option>
+                    <option value="-voornaam">voornaam alfabetief maar dan anders</option>
+                    <<option value="">nummer</option>
+                </select>
+                <!-- Rows to display:<input type="number" step="1" min="1" max="7" ng-model="rowLimit"> -->
+                <br>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>nummer</th>
+                            <th>naam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="employee in data | filter:searchFilter | orderBy:sortColumn| limitTo:rowLimit ">
+                            <td>{{$index}}</td>
+                            <td>{{employee.voornaam | uppercase}}</td>
+                            <td class="hide">{{employee.afdeling}}</td>
+                        </tr>
 
-                    <tr>
-                      <td ng-hide="(data|filter:searchFilter).length > 0">Sorry er zijn resultaten te vinden binnen uw zoektermen</td>
-                      <td ng-hide="(data|filter:searchFilter).length > 0"></td>
-                    </tr>
+                        <tr>
+                            <td ng-hide="(data|filter:searchFilter).length > 0">Sorry er zijn resultaten te vinden binnen uw zoektermen</td>
+                            <td ng-hide="(data|filter:searchFilter).length > 0"></td>
+                        </tr>
 
 
 
-                </tbody>
+                    </tbody>
 
-            </table>
-          </div>
+                </table>
+            </div>
         </div>
-      </div>
-      <div ng-controller="empcontroller">
+    </div>
+    <div>
         <form>
-          voornaam <input type="name" ng-model="voornaam"><br>
-          <input type="button" ng-click="insertdata()" value="submit"><br>
+            voornaam <input type="name" ng-model="voornaam"><br>
+            <input type="button" ng-click="insertdata()" value="submit"><br>
+        </form>
+    </div>
 
-      </div>
-
-      <input type="text" ng-model="person.name">
-      <h1>{{person.name}}</h1>
+        <input type="text" ng-model="person.name">
+        <h1>{{person.name}}</h1>
 
     </body>
 
     <script>
-        var fetch = angular.module('fetch', []);
+    var fetch = angular.module('fetch', []);
 
+    fetch.controller('databaseController', ['$scope', '$http', function ($scope, $http) {
+        $scope.data = [];
 
+        $http.get("ajax.php")
+        .success(function(data){
+            $scope.data = data;
+            console.log(data);
+        })
+        .error(function() {
+            $scope.data = "error in fetching data";
+        });
 
+        $scope.rowLimit = 25;
+        $scope.sortColumn = '';
 
+        $scope.insertdata = function (){
+            var invoegen = {
+                voornaam : $scope.voornaam
+            }
 
+            // HIER
+            $scope.data.push(invoegen);
+            $http.post('insert-select.php', invoegen).success(function(data){});
+        };
 
-        fetch.controller('databaseController', ['$scope', '$http', function ($scope, $http) {
-            $http.get("ajax.php")
-                .success(function(data){
-                    $scope.data = data;
-                })
-                .error(function() {
-                    $scope.data = "error in fetching data";
-                });
-
-                $scope.rowLimit = 25;
-                $scope.sortColumn = '';
-
-                }]);
-
-                fetch.controller('empcontroller', function($scope,$http) {
-                  $scope.insertdata = function Functionnaam(){
-                    $scope.nameArray = [];
-                    invoegen = {
-                      'voornaam':$scope.voornaam
-                    }
-                    $http.post('insert-select.php', invoegen).success(function(data){
-                      console.log("data is toegevoeged");
-
-                    });
-                  };
-                });
-
-
-
-
-
-
-
-
+    }]);
 
 
     </script>
